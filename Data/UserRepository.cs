@@ -18,7 +18,7 @@ namespace LearnSmartCoding.CosmosDb.Linq.API.Data
             _userContainer = cosmosClient.GetContainer(databaseName, userContainerName);            
         }
 
-        public async Task<UserDocument> GetUserByIdAsync(string userId)
+        public async Task<UserDocument?> GetUserByIdAsync(string userId)
         {
             var query = _userContainer.GetItemLinqQueryable<UserDocument>()
                 .Where(u => u.Id == userId)

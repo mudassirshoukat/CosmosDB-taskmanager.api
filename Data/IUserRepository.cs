@@ -6,7 +6,7 @@ namespace LearnSmartCoding.CosmosDb.Linq.API.Data
     {
         Task<UserDocument> CreateUserAsync(UserDocument user);
         Task DeleteUserAsync(string userId);
-        Task<UserDocument> GetUserByIdAsync(string userId);
+        Task<UserDocument?> GetUserByIdAsync(string userId);
         Task<UserDocument> UpdateUserAsync(UserDocument user);
     }
 }

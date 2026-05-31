@@ -35,7 +35,7 @@ namespace LearnSmartCoding.CosmosDb.Linq.API.Data
         }
 
 
-        public async Task<TasksDocument> GetTaskByIdAsync(string taskId, string userId)
+        public async Task<TasksDocument?> GetTaskByIdAsync(string taskId, string userId)
         {
             //var query = _taskContainer.GetItemLinqQueryable<TasksDocument>()
             //    .Where(t => t.Id == taskId && t.UserId == userId)
@@ -89,7 +89,7 @@ namespace LearnSmartCoding.CosmosDb.Linq.API.Data
             await _taskContainer.DeleteItemAsync<TasksDocument>(taskId, new PartitionKey(userId));
         }
 
-        public async Task<TasksDocument> UpdateSubtaskStatusAsync(string taskId, string subtaskId, string status)
+        public async Task<TasksDocument?> UpdateSubtaskStatusAsync(string taskId, string subtaskId, string status)
         {
             var query = _taskContainer.GetItemLinqQueryable<TasksDocument>()
                 .Where(t => t.Id == taskId)
@@ -117,7 +117,7 @@ namespace LearnSmartCoding.CosmosDb.Linq.API.Data
             return task;
         }
 
-        public async Task<TasksDocument> UpdateAttachmentsAsync(string taskId, List<Attachment> attachmentsToAdd, List<string> attachmentIdsToDelete)
+        public async Task<TasksDocument?> UpdateAttachmentsAsync(string taskId, List<Attachment> attachmentsToAdd, List<string> attachmentIdsToDelete)
         {
             var query = _taskContainer.GetItemLinqQueryable<TasksDocument>()
                 .Where(t => t.Id == taskId)
