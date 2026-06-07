@@ -2,50 +2,50 @@
 
 namespace LearnSmartCoding.CosmosDb.Linq.API
 {
-    public class RequestResponseLoggingMiddleware
-    {
-        private readonly RequestDelegate _next;
-        
+   public class RequestResponseLoggingMiddleware
+   {
+      private readonly RequestDelegate _next;
 
-        public RequestResponseLoggingMiddleware(RequestDelegate next
-            )
-        {
-            _next = next;
-        }
 
-        public async Task Invoke(HttpContext context)
-        {
-            // Log the request
-            Log.Information($"Request: {context.Request.Method} {context.Request.Path}");
+      public RequestResponseLoggingMiddleware(RequestDelegate next
+          )
+      {
+         _next = next;
+      }
 
-            // Copy the original response body stream
-            var originalBodyStream = context.Response.Body;
+      public async Task Invoke(HttpContext context)
+      {
+         // Log the request
+         Log.Information($"Request: {context.Request.Method} {context.Request.Path}");
 
-            // Create a new memory stream to capture the response
-            using (var responseBody = new MemoryStream())
-            {
-                // Set the response body stream to the memory stream
-                context.Response.Body = responseBody;
+         // Copy the original response body stream
+         var originalBodyStream = context.Response.Body;
 
-                // Continue processing the request
-                await _next(context);
+         // Create a new memory stream to capture the response
+         using (var responseBody = new MemoryStream())
+         {
+            // Set the response body stream to the memory stream
+            context.Response.Body = responseBody;
 
-                // Log the response
-                var response = await FormatResponse(context.Response);
-                Log.Information($"Response: {response}");
+            // Continue processing the request
+            await _next(context);
 
-                // Copy the captured response to the original response body stream
-                responseBody.Seek(0, SeekOrigin.Begin);
-                await responseBody.CopyToAsync(originalBodyStream);
-            }
-        }
+            // Log the response
+            var response = await FormatResponse(context.Response);
+            Log.Information($"Response: {response}");
 
-        private async Task<string> FormatResponse(HttpResponse response)
-        {
-            response.Body.Seek(0, SeekOrigin.Begin);
-            var text = await new StreamReader(response.Body).ReadToEndAsync();
-            response.Body.Seek(0, SeekOrigin.Begin);
-            return $"{response.StatusCode}: {text}";
-        }
-    }
+            // Copy the captured response to the original response body stream
+            responseBody.Seek(0, SeekOrigin.Begin);
+            await responseBody.CopyToAsync(originalBodyStream);
+         }
+      }
+
+      private async Task<string> FormatResponse(HttpResponse response)
+      {
+         response.Body.Seek(0, SeekOrigin.Begin);
+         var text = await new StreamReader(response.Body).ReadToEndAsync();
+         response.Body.Seek(0, SeekOrigin.Begin);
+         return $"{response.StatusCode}: {text}";
+      }
+   }
 }
